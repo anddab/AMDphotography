@@ -1,0 +1,34 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "uploads"
+public_folder: "/uploads"
+
+collections:
+  - name: "photos"
+    label: "Fotografie"
+    folder: "content/photos"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - { label: "Titolo Foto", name: "title", widget: "string" }
+      - { label: "Immagine Principale (Originale)", name: "image", widget: "image" }
+      - { 
+          label: "Immagini Mockup / Viste Aggiuntive (es. Quadro in ambiente)", 
+          name: "mockups", 
+          widget: "list", 
+          field: { label: "Immagine Mockup", name: "mockup", widget: "image" },
+          required: false
+        }
+      - { 
+          label: "Categoria", 
+          name: "category", 
+          widget: "select", 
+          options: ["paesaggi", "ritratti", "architettura", "street", "notturna"] 
+        }
+      - { label: "Link per Acquisto Stampa (es. Etsy, FineArt)", name: "buy_url", widget: "string", required: false }
+      - { label: "Fotocamera", name: "camera", widget: "string", default: "Sony A7 IV" }
+      - { label: "Obiettivo", name: "lens", widget: "string", default: "24-70mm f/2.8 GM II" }
+      - { label: "Dati EXIF (Diaframma/Tempo/ISO)", name: "exif", widget: "string", default: "f/8.0 | 1/250s | ISO 100" }
+      - { label: "Luogo", name: "location", widget: "string", required: false }
