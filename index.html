@@ -108,6 +108,7 @@
       gap: 0.75rem;
       margin-bottom: 2rem;
       flex-wrap: wrap;
+      min-height: 38px;
     }
 
     .filter-btn {
@@ -119,6 +120,7 @@
       cursor: pointer;
       transition: all 0.2s;
       font-size: 0.85rem;
+      text-transform: capitalize;
     }
 
     .filter-btn:hover, .filter-btn.active {
@@ -321,14 +323,8 @@
   <main>
     <!-- SEZIONE GALLERIA -->
     <section id="gallery-section" class="page-section active">
-      <div class="filters">
-        <button class="filter-btn active" onclick="filterGallery('all')">Tutte</button>
-        <button class="filter-btn" onclick="filterGallery('paesaggi')">Paesaggi</button>
-        <button class="filter-btn" onclick="filterGallery('ritratti')">Ritratti</button>
-        <button class="filter-btn" onclick="filterGallery('architettura')">Architettura</button>
-        <button class="filter-btn" onclick="filterGallery('street')">Street</button>
-        <button class="filter-btn" onclick="filterGallery('notturna')">Notturna</button>
-      </div>
+      <!-- I filtri verranno generati dinamicamente dal JS -->
+      <div class="filters" id="categoryFilters"></div>
 
       <div class="gallery-grid" id="galleryGrid">
         <div class="loading-msg">Caricamento fotografie in corso...</div>
@@ -382,6 +378,7 @@
     let loadedPhotos = [];
     let currentPhoto = null;
     let currentSlideIndex = 0;
+    let currentFilter = 'all';
 
     // Funzione per interpretare i file Frontmatter dei Markdown generati dal CMS
     function parseFrontmatter(text) {
@@ -452,6 +449,7 @@
         if (loadedPhotos.length === 0) {
           grid.innerHTML = '<div class="loading-msg">Nessuna fotografia trovata. Aggiungine una dal tuo pannello /admin!</div>';
         } else {
+          buildDynamicFilters();
           renderGallery('all');
         }
       } catch (err) {
@@ -460,25 +458,71 @@
       }
     }
 
+    // Genera automaticamente i pulsanti dei filtri in base alle categorie presenti nelle foto
+    function buildDynamicFilters() {
+      const filterContainer = document.getElementById('categoryFilters');
+      filterContainer.innerHTML = '';
+
+      const categories = new Set();
+      loadedPhotos.forEach(p => {
+        if (p.category) {
+          categories.add(p.category.trim().toLowerCase());
+        }
+      });
+
+      // Pulsante "Tutte"
+      const allBtn = document.createElement('button');
+      allBtn.className = 'filter-btn active';
+      allBtn.textContent = 'Tutte';
+      allBtn.onclick = (e) => filterGallery('all', e.target);
+      filterContainer.appendChild(allBtn);
+
+      // Pulsanti per ciascuna categoria trovata
+      Array.from(categories).sort().forEach(cat => {
+        const btn = document.createElement('button');
+        btn.className = 'filter-btn';
+        btn.textContent = cat;
+        btn.onclick = (e) => filterGallery(cat, e.target);
+        filterContainer.appendChild(btn);
+      });
+    }
+
     function renderGallery(filter = 'all') {
       const grid = document.getElementById('galleryGrid');
       grid.innerHTML = '';
 
-      loadedPhotos.forEach(photo => {
-        if (filter === 'all' || (photo.category && photo.category.toLowerCase() === filter.toLowerCase())) {
-          const card = document.createElement('div');
-          card.className = 'photo-card';
-          const mainImg = photo.views[0] || 'https://via.placeholder.com/800x600';
-          card.innerHTML = `
-            <img src="${mainImg}" alt="${photo.title || 'Fotografia'}">
-            <div class="photo-info-overlay">
-              <h4>${photo.title || 'Senza titolo'}</h4>
-            </div>
-          `;
-          card.onclick = () => openModal(photo);
-          grid.appendChild(card);
-        }
+      const filtered = loadedPhotos.filter(photo => {
+        if (filter === 'all') return true;
+        return photo.category && photo.category.trim().toLowerCase() === filter.toLowerCase();
       });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '<div class="loading-msg">Nessuna fotografia presente per questa categoria.</div>';
+        return;
+      }
+
+      filtered.forEach(photo => {
+        const card = document.createElement('div');
+        card.className = 'photo-card';
+        const mainImg = photo.views[0] || 'https://via.placeholder.com/800x600';
+        card.innerHTML = `
+          <img src="${mainImg}" alt="${photo.title || 'Fotografia'}">
+          <div class="photo-info-overlay">
+            <h4>${photo.title || 'Senza titolo'}</h4>
+          </div>
+        `;
+        card.onclick = () => openModal(photo);
+        grid.appendChild(card);
+      });
+    }
+
+    function filterGallery(cat, targetBtn) {
+      currentFilter = cat;
+      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+      if (targetBtn) {
+        targetBtn.classList.add('active');
+      }
+      renderGallery(cat);
     }
 
     function openModal(photo) {
@@ -515,12 +559,6 @@
       if (!currentPhoto || !currentPhoto.views || currentPhoto.views.length <= 1) return;
       currentSlideIndex = (currentSlideIndex + direction + currentPhoto.views.length) % currentPhoto.views.length;
       updateModalView();
-    }
-
-    function filterGallery(cat) {
-      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-      event.target.classList.add('active');
-      renderGallery(cat);
     }
 
     function switchPage(page) {
