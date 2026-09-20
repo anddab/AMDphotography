@@ -66,18 +66,19 @@
       display: flex;
       align-items: center;
       cursor: pointer;
-      height: 80px; /* Aumentato da 40px a 80px per massima visibilità */
+      height: 85px;
+      width: 85px;
     }
 
     .site-logo {
       height: 100%;
-      width: auto;
+      width: 100%;
       display: block;
       object-fit: contain;
       transition: opacity 0.4s ease-in-out;
     }
 
-    /* Default (Notte): Mostra il logo chiaro (bianco), nascondi lo scuro */
+    /* Default (Tema Notte / Scuro): mostra il logo chiaro */
     .logo-light {
       opacity: 1;
     }
@@ -89,7 +90,7 @@
       opacity: 0;
     }
 
-    /* Modalità Giorno (Light): Mostra il logo scuro (nero), nascondi il chiaro */
+    /* Tema Giorno / Chiaro: mostra il logo scuro */
     [data-theme="light"] .logo-light {
       opacity: 0;
     }
@@ -338,7 +339,7 @@
     @media (max-width: 768px) {
       .about-container { grid-template-columns: 1fr; }
       .gallery-grid { columns: 1; }
-      .logo-container { height: 60px; } /* Leggermente più piccolo su schermi smartphone */
+      .logo-container { height: 60px; width: 60px; }
     }
   </style>
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
