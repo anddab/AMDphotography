@@ -39,7 +39,7 @@
       color: var(--text);
       font-family: var(--font-main);
       line-height: 1.6;
-      transition: background-color 0.3s, color 0.3s;
+      transition: background-color 0.4s ease, color 0.4s ease;
     }
 
     header {
@@ -53,17 +53,49 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      transition: background-color 0.4s ease, border-color 0.4s ease;
     }
 
     [data-theme="light"] header {
       background: rgba(248, 249, 250, 0.85);
     }
 
-    .logo {
-      font-size: 1.25rem;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
+    /* GESTIONE LOGO FLUIDO CHIARO/SCURO */
+    .logo-container {
+      position: relative;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      height: 40px;
+    }
+
+    .site-logo {
+      height: 100%;
+      width: auto;
+      display: block;
+      object-fit: contain;
+      transition: opacity 0.4s ease-in-out;
+    }
+
+    /* Default (Notte): Mostra il logo chiaro (bianco), nascondi lo scuro */
+    .logo-light {
+      opacity: 1;
+    }
+
+    .logo-dark {
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0;
+    }
+
+    /* Modalità Giorno (Light): Mostra il logo scuro (nero), nascondi il chiaro */
+    [data-theme="light"] .logo-light {
+      opacity: 0;
+    }
+
+    [data-theme="light"] .logo-dark {
+      opacity: 1;
     }
 
     .nav-links {
@@ -94,6 +126,7 @@
       border-radius: 20px;
       cursor: pointer;
       font-size: 0.85rem;
+      transition: border-color 0.3s, color 0.3s;
     }
 
     main {
@@ -312,7 +345,12 @@
 <body>
 
   <header>
-    <div class="logo">AMD Photography</div>
+    <div class="logo-container" onclick="switchPage('gallery')">
+      <!-- Logo per la Dark Mode (Linee bianche) -->
+      <img src="/AMDphotoLOGO-light.png" alt="AMD Photography Logo" class="site-logo logo-light">
+      <!-- Logo per la Light Mode (Linee nere) -->
+      <img src="/AMDphotoLOGO-dark.png" alt="AMD Photography Logo" class="site-logo logo-dark">
+    </div>
     <div class="nav-links">
       <button class="nav-btn active" onclick="switchPage('gallery')">Galleria</button>
       <button class="nav-btn" onclick="switchPage('about')">Chi Sono</button>
@@ -323,7 +361,6 @@
   <main>
     <!-- SEZIONE GALLERIA -->
     <section id="gallery-section" class="page-section active">
-      <!-- I filtri verranno generati dinamicamente dal JS -->
       <div class="filters" id="categoryFilters"></div>
 
       <div class="gallery-grid" id="galleryGrid">
@@ -380,7 +417,6 @@
     let currentSlideIndex = 0;
     let currentFilter = 'all';
 
-    // Funzione per interpretare i file Frontmatter dei Markdown generati dal CMS
     function parseFrontmatter(text) {
       const result = { views: [] };
       const lines = text.split('\n');
@@ -458,7 +494,6 @@
       }
     }
 
-    // Genera automaticamente i pulsanti dei filtri in base alle categorie presenti nelle foto
     function buildDynamicFilters() {
       const filterContainer = document.getElementById('categoryFilters');
       filterContainer.innerHTML = '';
@@ -470,14 +505,12 @@
         }
       });
 
-      // Pulsante "Tutte"
       const allBtn = document.createElement('button');
       allBtn.className = 'filter-btn active';
       allBtn.textContent = 'Tutte';
       allBtn.onclick = (e) => filterGallery('all', e.target);
       filterContainer.appendChild(allBtn);
 
-      // Pulsanti per ciascuna categoria trovata
       Array.from(categories).sort().forEach(cat => {
         const btn = document.createElement('button');
         btn.className = 'filter-btn';
@@ -570,7 +603,9 @@
       } else {
         document.getElementById('about-section').classList.add('active');
       }
-      event.target.classList.add('active');
+      if (event && event.target && event.target.classList.contains('nav-btn')) {
+        event.target.classList.add('active');
+      }
     }
 
     function toggleTheme() {
@@ -585,7 +620,6 @@
       if (e.key === 'Escape') closeModal();
     });
 
-    // Avvio caricamento
     loadCMSPhotos();
   </script>
 </body>
