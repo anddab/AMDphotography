@@ -49,7 +49,7 @@
       background: rgba(15, 15, 17, 0.85);
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
-      padding: 1rem 2rem;
+      padding: 0.8rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -60,13 +60,13 @@
       background: rgba(248, 249, 250, 0.85);
     }
 
-    /* GESTIONE LOGO FLUIDO CHIARO/SCURO */
+    /* GESTIONE LOGO INGRANDITO E FLUIDO */
     .logo-container {
       position: relative;
       display: flex;
       align-items: center;
       cursor: pointer;
-      height: 40px;
+      height: 80px; /* Aumentato da 40px a 80px per massima visibilità */
     }
 
     .site-logo {
@@ -338,6 +338,7 @@
     @media (max-width: 768px) {
       .about-container { grid-template-columns: 1fr; }
       .gallery-grid { columns: 1; }
+      .logo-container { height: 60px; } /* Leggermente più piccolo su schermi smartphone */
     }
   </style>
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
