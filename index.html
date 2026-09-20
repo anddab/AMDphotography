@@ -3,31 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AMD Photography | Fine Art Portfolio</title>
-  
-  <!-- Netlify Identity Widget (Per la gestione dei token/inviti) -->
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-
+  <title>AMD Photography - Fine Art Portfolio</title>
   <style>
     :root {
-      --bg: #09090b;
-      --card-bg: #18181b;
-      --text: #f4f4f5;
-      --text-muted: #a1a1aa;
+      --bg: #0f0f11;
+      --card-bg: #18181c;
+      --text: #f1f1f5;
+      --text-muted: #9e9ea7;
       --accent: #d4af37;
       --accent-hover: #f1c40f;
-      --border: #27272a;
+      --border: #2a2a32;
       --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
 
     [data-theme="light"] {
       --bg: #f8f9fa;
       --card-bg: #ffffff;
-      --text: #18181b;
-      --text-muted: #71717a;
+      --text: #1a1a1a;
+      --text-muted: #6c757d;
       --accent: #c59b27;
       --accent-hover: #a37f1e;
-      --border: #e4e4e7;
+      --border: #e9ecef;
     }
 
     * {
@@ -50,7 +46,7 @@
       position: sticky;
       top: 0;
       z-index: 100;
-      background: rgba(9, 9, 11, 0.85);
+      background: rgba(15, 15, 17, 0.85);
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
       padding: 1rem 2rem;
@@ -64,9 +60,9 @@
     }
 
     .logo {
-      font-size: 1.1rem;
+      font-size: 1.25rem;
       font-weight: 700;
-      letter-spacing: 2px;
+      letter-spacing: 1px;
       text-transform: uppercase;
     }
 
@@ -80,12 +76,10 @@
       background: none;
       border: none;
       color: var(--text-muted);
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       font-weight: 500;
       cursor: pointer;
       transition: color 0.2s;
-      text-transform: uppercase;
-      letter-spacing: 1px;
     }
 
     .nav-btn:hover, .nav-btn.active {
@@ -112,7 +106,7 @@
       display: flex;
       justify-content: center;
       gap: 0.75rem;
-      margin-bottom: 2.5rem;
+      margin-bottom: 2rem;
       flex-wrap: wrap;
     }
 
@@ -124,9 +118,7 @@
       border-radius: 20px;
       cursor: pointer;
       transition: all 0.2s;
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
+      font-size: 0.85rem;
     }
 
     .filter-btn:hover, .filter-btn.active {
@@ -155,7 +147,7 @@
 
     .photo-card:hover {
       transform: translateY(-4px);
-      box-shadow: 0 12px 24px rgba(0,0,0,0.4);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.3);
     }
 
     .photo-card img {
@@ -169,8 +161,8 @@
       bottom: 0;
       left: 0;
       right: 0;
-      padding: 1.5rem 1rem 1rem 1rem;
-      background: linear-gradient(transparent, rgba(0,0,0,0.9));
+      padding: 1rem;
+      background: linear-gradient(transparent, rgba(0,0,0,0.8));
       color: #fff;
       opacity: 0;
       transition: opacity 0.3s;
@@ -180,28 +172,17 @@
       opacity: 1;
     }
 
-    .photo-info-overlay h4 {
-      font-size: 0.95rem;
-      font-weight: 500;
-    }
-
-    .photo-info-overlay p {
-      font-size: 0.75rem;
-      color: #a1a1aa;
-      margin-top: 2px;
-    }
-
     /* MODAL LIGHTBOX */
     .modal {
       display: none;
       position: fixed;
       inset: 0;
       z-index: 1000;
-      background: rgba(0, 0, 0, 0.95);
-      backdrop-filter: blur(12px);
+      background: rgba(0, 0, 0, 0.92);
+      backdrop-filter: blur(10px);
       justify-content: center;
       align-items: center;
-      padding: 1.5rem;
+      padding: 2rem;
     }
 
     .modal.active {
@@ -217,7 +198,7 @@
       border: 1px solid var(--border);
       display: flex;
       flex-direction: column;
-      max-height: 92vh;
+      max-height: 90vh;
       position: relative;
     }
 
@@ -228,7 +209,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 420px;
+      min-height: 400px;
       overflow: hidden;
     }
 
@@ -239,7 +220,6 @@
       pointer-events: none;
     }
 
-    /* Strato protettivo trasparente per impedire download/trascinamento */
     .photo-shield {
       position: absolute;
       inset: 0;
@@ -252,25 +232,20 @@
       transform: translateY(-50%);
       background: rgba(0,0,0,0.6);
       color: #fff;
-      border: 1px solid rgba(255,255,255,0.2);
+      border: none;
       width: 44px;
       height: 44px;
       border-radius: 50%;
       cursor: pointer;
       z-index: 20;
       font-size: 1.2rem;
-      transition: background 0.2s;
-    }
-
-    .carousel-btn:hover {
-      background: rgba(0,0,0,0.9);
     }
 
     .carousel-btn.prev { left: 1rem; }
     .carousel-btn.next { right: 1rem; }
 
     .modal-details {
-      padding: 1.25rem 1.5rem;
+      padding: 1.5rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -279,22 +254,14 @@
       flex-wrap: wrap;
     }
 
-    .exif-tag {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      margin-top: 3px;
-    }
-
     .buy-btn {
       background: var(--accent);
       color: #000;
       padding: 0.75rem 1.5rem;
       border-radius: 6px;
       text-decoration: none;
-      font-weight: 600;
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
+      font-weight: 700;
+      font-size: 0.9rem;
       transition: background 0.2s;
     }
 
@@ -308,13 +275,12 @@
       right: 1rem;
       background: rgba(0,0,0,0.7);
       color: #fff;
-      border: 1px solid rgba(255,255,255,0.2);
+      border: none;
       width: 36px;
       height: 36px;
       border-radius: 50%;
       cursor: pointer;
       z-index: 30;
-      font-size: 1rem;
     }
 
     /* ABOUT SECTION */
@@ -328,30 +294,26 @@
       align-items: start;
     }
 
-    .loading-spinner {
+    .loading-msg {
       text-align: center;
-      padding: 4rem;
+      padding: 3rem;
       color: var(--text-muted);
-      font-size: 0.9rem;
-      letter-spacing: 1px;
-      text-transform: uppercase;
     }
 
     @media (max-width: 768px) {
       .about-container { grid-template-columns: 1fr; }
       .gallery-grid { columns: 1; }
-      .modal-details { flex-direction: column; align-items: flex-start; }
-      .buy-btn { width: 100%; text-align: center; }
     }
   </style>
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 <body>
 
   <header>
     <div class="logo">AMD Photography</div>
     <div class="nav-links">
-      <button class="nav-btn active" onclick="switchPage('gallery', event)">Galleria</button>
-      <button class="nav-btn" onclick="switchPage('about', event)">Chi Sono</button>
+      <button class="nav-btn active" onclick="switchPage('gallery')">Galleria</button>
+      <button class="nav-btn" onclick="switchPage('about')">Chi Sono</button>
       <button class="theme-toggle" onclick="toggleTheme()">☀️ / 🌙</button>
     </div>
   </header>
@@ -360,18 +322,17 @@
     <!-- SEZIONE GALLERIA -->
     <section id="gallery-section" class="page-section active">
       <div class="filters">
-        <button class="filter-btn active" onclick="filterGallery('all', event)">Tutte</button>
-        <button class="filter-btn" onclick="filterGallery('paesaggi', event)">Paesaggi</button>
-        <button class="filter-btn" onclick="filterGallery('ritratti', event)">Ritratti</button>
-        <button class="filter-btn" onclick="filterGallery('architettura', event)">Architettura</button>
-        <button class="filter-btn" onclick="filterGallery('street', event)">Street</button>
+        <button class="filter-btn active" onclick="filterGallery('all')">Tutte</button>
+        <button class="filter-btn" onclick="filterGallery('paesaggi')">Paesaggi</button>
+        <button class="filter-btn" onclick="filterGallery('ritratti')">Ritratti</button>
+        <button class="filter-btn" onclick="filterGallery('architettura')">Architettura</button>
+        <button class="filter-btn" onclick="filterGallery('street')">Street</button>
+        <button class="filter-btn" onclick="filterGallery('notturna')">Notturna</button>
       </div>
 
-      <div id="loadingState" class="loading-spinner">
-        Caricamento fotografie in corso...
+      <div class="gallery-grid" id="galleryGrid">
+        <div class="loading-msg">Caricamento fotografie in corso...</div>
       </div>
-
-      <div class="gallery-grid" id="galleryGrid"></div>
     </section>
 
     <!-- SEZIONE ABOUT -->
@@ -381,29 +342,28 @@
         <div>
           <h2>Chi Sono</h2>
           <p style="margin-top: 1rem; color: var(--text-muted);">
-            Benvenuto nel mio portfolio fine-art. Sono specializzato in fotografia di paesaggio, architettura e reportage visivo.
-            Ogni fotografia inserita nel portfolio è disponibile per l'acquisto sotto forma di stampa d'arte in alta risoluzione.
+            Benvenuto nel mio portfolio. Sono un fotografo specializzato in reportage di paesaggio ed arte visiva.
+            Ogni scatto è disponibile come stampa d'arte in edizione limitata.
           </p>
         </div>
       </div>
     </section>
   </main>
 
-  <!-- MODAL LIGHTBOX CON PROTEZIONE E CAROSELLO MOCKUP -->
+  <!-- MODAL LIGHTBOX CON PROTEZIONE E MOCKUP CAROSELLO -->
   <div class="modal" id="photoModal">
     <div class="modal-container">
       <button class="close-modal" onclick="closeModal()">✕</button>
       <div class="modal-viewport">
-        <!-- Strato protettivo invisibile sopra l'immagine -->
         <div class="photo-shield" oncontextmenu="return false;"></div>
-        <button class="carousel-btn prev" id="prevBtn" onclick="changeSlide(-1)">❮</button>
-        <img id="modalImg" src="" alt="Fotografia">
-        <button class="carousel-btn next" id="nextBtn" onclick="changeSlide(1)">❯</button>
+        <button class="carousel-btn prev" onclick="changeSlide(-1)">❮</button>
+        <img id="modalImg" src="" alt="Foto principale">
+        <button class="carousel-btn next" onclick="changeSlide(1)">❯</button>
       </div>
       <div class="modal-details">
         <div>
           <h3 id="modalTitle">Titolo Foto</h3>
-          <p id="modalExif" class="exif-tag">Dettagli EXIF</p>
+          <p id="modalExif" style="color: var(--text-muted); font-size: 0.85rem;">Dettagli EXIF</p>
         </div>
         <a id="modalBuyLink" href="#" target="_blank" class="buy-btn">Acquista Stampa d'Arte</a>
       </div>
@@ -411,24 +371,24 @@
   </div>
 
   <script>
-    // Configurazione del tuo repository GitHub
-    const GITHUB_USER = "AMD-PHOTOGRAPHY"; // Inserisci qui il tuo nome utente GitHub esatto se diverso
-    const GITHUB_REPO = "amdphotography";  // Il nome del tuo repository
-    const PHOTOS_PATH = "content/photos";
-
-    // Blocco globale tasto destro per proteggere i contenuti dal download
+    // Blocco globale del tasto destro
     document.addEventListener('contextmenu', event => event.preventDefault());
+
+    // Configurazione GitHub
+    const GITHUB_USER = "anddab";
+    const GITHUB_REPO = "AMDPhotography";
+    const BRANCH = "main";
 
     let loadedPhotos = [];
     let currentPhoto = null;
     let currentSlideIndex = 0;
 
-    // Parser semplificato per i file Markdown/Frontmatter generati da Decap CMS
+    // Funzione per interpretare i file Frontmatter dei Markdown generati dal CMS
     function parseFrontmatter(text) {
-      const result = {};
+      const result = { views: [] };
       const lines = text.split('\n');
       let inFrontmatter = false;
-      let currentKey = null;
+      let inMockups = false;
 
       lines.forEach(line => {
         const trimmed = line.trim();
@@ -437,32 +397,46 @@
           return;
         }
         if (inFrontmatter) {
-          if (trimmed.startsWith('- ') && currentKey) {
-            if (!Array.isArray(result[currentKey])) result[currentKey] = [];
-            let val = trimmed.replace('- ', '').replace(/^["']|["']$/g, '');
-            result[currentKey].push(val);
-          } else {
-            const parts = trimmed.split(':');
-            if (parts.length >= 2) {
-              const key = parts[0].trim();
-              let value = parts.slice(1).join(':').trim().replace(/^["']|["']$/g, '');
-              result[key] = value;
-              currentKey = key;
-            }
+          if (trimmed.startsWith('mockups:')) {
+            inMockups = true;
+            return;
+          }
+          if (inMockups && trimmed.startsWith('- mockup:')) {
+            let val = trimmed.replace('- mockup:', '').trim().replace(/^["']|["']$/g, '');
+            if (val) result.views.push(cleanImgUrl(val));
+            return;
+          }
+          if (!trimmed.startsWith('-') && inMockups) {
+            inMockups = false;
+          }
+
+          const colonIndex = trimmed.indexOf(':');
+          if (colonIndex !== -1 && !inMockups) {
+            const key = trimmed.slice(0, colonIndex).trim();
+            let val = trimmed.slice(colonIndex + 1).trim().replace(/^["']|["']$/g, '');
+            result[key] = val;
           }
         }
       });
+
+      if (result.image) {
+        result.views.unshift(cleanImgUrl(result.image));
+      }
       return result;
     }
 
-    // Caricamento dinamico delle foto da GitHub API
-    async function fetchCMSPhotos() {
-      const loadingEl = document.getElementById('loadingState');
+    function cleanImgUrl(url) {
+      if (!url) return '';
+      if (url.startsWith('http://') || url.startsWith('https://')) return url;
+      return url.startsWith('/') ? url : '/' + url;
+    }
+
+    async function loadCMSPhotos() {
+      const grid = document.getElementById('galleryGrid');
       try {
-        // Tenta il recupero dinamico dal repository GitHub
-        const response = await fetch(`https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${PHOTOS_PATH}`);
-        
-        if (!response.ok) throw new Error("Nessuna foto trovata nel CMS o errore API");
+        const apiUrl = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/content/photos?ref=${BRANCH}`;
+        const response = await fetch(apiUrl);
+        if (!response.ok) throw new Error('Impossibile accedere alla cartella delle foto');
 
         const files = await response.json();
         const photoPromises = files
@@ -470,91 +444,40 @@
           .map(async file => {
             const res = await fetch(file.download_url);
             const content = await res.text();
-            const data = parseFrontmatter(content);
-            
-            // Costruzione lista di viste/mockup
-            const views = [];
-            if (data.image) views.push(data.image);
-            if (data.mockups && Array.isArray(data.mockups)) {
-              views.push(...data.mockups);
-            } else if (data.mockup) {
-              views.push(data.mockup);
-            }
-
-            return {
-              id: file.name,
-              title: data.title || "Senza Titolo",
-              category: (data.category || "paesaggi").toLowerCase(),
-              views: views.length > 0 ? views : ["https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1600&q=80"],
-              exif: `${data.camera || ''} ${data.lens ? '| ' + data.lens : ''} ${data.exif ? '| ' + data.exif : ''}`.trim() || "Dettagli EXIF non specificati",
-              buyUrl: data.buy_url || "#"
-            };
+            return parseFrontmatter(content);
           });
 
         loadedPhotos = await Promise.all(photoPromises);
-        
+
         if (loadedPhotos.length === 0) {
-          loadFallbackPhotos();
+          grid.innerHTML = '<div class="loading-msg">Nessuna fotografia trovata. Aggiungine una dal tuo pannello /admin!</div>';
+        } else {
+          renderGallery('all');
         }
       } catch (err) {
-        console.warn("Impossibile caricare dal CMS o cartella vuota. Caricamento foto dimostrative...", err);
-        loadFallbackPhotos();
-      } finally {
-        if (loadingEl) loadingEl.style.display = 'none';
-        renderGallery();
+        console.error(err);
+        grid.innerHTML = '<div class="loading-msg">Errore nel caricamento delle fotografie dal CMS.</div>';
       }
-    }
-
-    // Foto fallback nel caso in cui il CMS sia vuoto
-    function loadFallbackPhotos() {
-      loadedPhotos = [
-        {
-          id: 1,
-          title: "Nebbia sulle Dolomiti",
-          category: "paesaggi",
-          views: [
-            "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1600&q=80",
-            "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=1600&q=80"
-          ],
-          exif: "Sony A7 IV | 24mm | f/8.0 | ISO 100",
-          buyUrl: "https://etsy.com"
-        },
-        {
-          id: 2,
-          title: "Geometrie Urbane",
-          category: "architettura",
-          views: [
-            "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1600&q=80"
-          ],
-          exif: "Canon R5 | 35mm | f/5.6 | ISO 200",
-          buyUrl: "https://etsy.com"
-        }
-      ];
     }
 
     function renderGallery(filter = 'all') {
       const grid = document.getElementById('galleryGrid');
       grid.innerHTML = '';
 
-      const filtered = loadedPhotos.filter(p => filter === 'all' || p.category === filter);
-
-      if (filtered.length === 0) {
-        grid.innerHTML = `<p style="color:var(--text-muted); text-align:center; grid-column: 1/-1; padding: 3rem;">Nessuna fotografia trovata per questa categoria.</p>`;
-        return;
-      }
-
-      filtered.forEach(photo => {
-        const card = document.createElement('div');
-        card.className = 'photo-card';
-        card.innerHTML = `
-          <img src="${photo.views[0]}" alt="${photo.title}" loading="lazy">
-          <div class="photo-info-overlay">
-            <h4>${photo.title}</h4>
-            <p>${photo.category.toUpperCase()}</p>
-          </div>
-        `;
-        card.onclick = () => openModal(photo);
-        grid.appendChild(card);
+      loadedPhotos.forEach(photo => {
+        if (filter === 'all' || (photo.category && photo.category.toLowerCase() === filter.toLowerCase())) {
+          const card = document.createElement('div');
+          card.className = 'photo-card';
+          const mainImg = photo.views[0] || 'https://via.placeholder.com/800x600';
+          card.innerHTML = `
+            <img src="${mainImg}" alt="${photo.title || 'Fotografia'}">
+            <div class="photo-info-overlay">
+              <h4>${photo.title || 'Senza titolo'}</h4>
+            </div>
+          `;
+          card.onclick = () => openModal(photo);
+          grid.appendChild(card);
+        }
       });
     }
 
@@ -570,52 +493,46 @@
     }
 
     function updateModalView() {
-      document.getElementById('modalImg').src = currentPhoto.views[currentSlideIndex];
-      document.getElementById('modalTitle').textContent = currentPhoto.title;
-      document.getElementById('modalExif').textContent = currentPhoto.exif;
+      const views = (currentPhoto.views && currentPhoto.views.length > 0) ? currentPhoto.views : ['https://via.placeholder.com/1200x800'];
+      document.getElementById('modalImg').src = views[currentSlideIndex];
+      document.getElementById('modalTitle').textContent = currentPhoto.title || 'Senza titolo';
       
+      const cameraInfo = currentPhoto.camera || '';
+      const lensInfo = currentPhoto.lens || '';
+      const exifInfo = currentPhoto.exif || '';
+      document.getElementById('modalExif').textContent = [cameraInfo, lensInfo, exifInfo].filter(Boolean).join(' | ') || 'AMD Photography';
+
       const buyBtn = document.getElementById('modalBuyLink');
-      if (currentPhoto.buyUrl && currentPhoto.buyUrl !== '#') {
-        buyBtn.href = currentPhoto.buyUrl;
+      if (currentPhoto.buy_url) {
+        buyBtn.href = currentPhoto.buy_url;
         buyBtn.style.display = 'inline-block';
       } else {
         buyBtn.style.display = 'none';
       }
-
-      // Mostra o nascondi le frecce se c'è una sola vista/mockup
-      const prevBtn = document.getElementById('prevBtn');
-      const nextBtn = document.getElementById('nextBtn');
-      if (currentPhoto.views.length <= 1) {
-        prevBtn.style.display = 'none';
-        nextBtn.style.display = 'none';
-      } else {
-        prevBtn.style.display = 'block';
-        nextBtn.style.display = 'block';
-      }
     }
 
     function changeSlide(direction) {
-      if (!currentPhoto || currentPhoto.views.length <= 1) return;
+      if (!currentPhoto || !currentPhoto.views || currentPhoto.views.length <= 1) return;
       currentSlideIndex = (currentSlideIndex + direction + currentPhoto.views.length) % currentPhoto.views.length;
       updateModalView();
     }
 
-    function filterGallery(cat, event) {
+    function filterGallery(cat) {
       document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-      if (event) event.target.classList.add('active');
+      event.target.classList.add('active');
       renderGallery(cat);
     }
 
-    function switchPage(page, event) {
+    function switchPage(page) {
       document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active'));
       document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-      
+
       if (page === 'gallery') {
         document.getElementById('gallery-section').classList.add('active');
       } else {
         document.getElementById('about-section').classList.add('active');
       }
-      if (event) event.target.classList.add('active');
+      event.target.classList.add('active');
     }
 
     function toggleTheme() {
@@ -623,18 +540,6 @@
       document.body.setAttribute('data-theme', current === 'light' ? 'dark' : 'light');
     }
 
-    // Gestione reindirizzamento login Netlify Identity
-    if (window.netlifyIdentity) {
-      window.netlifyIdentity.on("init", user => {
-        if (!user) {
-          window.netlifyIdentity.on("login", () => {
-            document.location.href = "/admin/";
-          });
-        }
-      });
-    }
-
-    // Navigazione tastiera nel Lightbox Modal
     document.addEventListener('keydown', (e) => {
       if (!document.getElementById('photoModal').classList.contains('active')) return;
       if (e.key === 'ArrowLeft') changeSlide(-1);
@@ -642,8 +547,8 @@
       if (e.key === 'Escape') closeModal();
     });
 
-    // Avvio del caricamento dati all'apertura del sito
-    fetchCMSPhotos();
+    // Avvio caricamento
+    loadCMSPhotos();
   </script>
 </body>
 </html>
