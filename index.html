@@ -4,6 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AMD Photography - Fine Art Portfolio</title>
+  
+  <!-- Font Google Elegant per titoli Fine Art -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+
   <style>
     :root {
       --bg: #0f0f11;
@@ -14,6 +20,7 @@
       --accent-hover: #f1c40f;
       --border: #2a2a32;
       --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --font-heading: 'Cormorant Garamond', serif;
     }
 
     [data-theme="light"] {
@@ -42,6 +49,11 @@
       transition: background-color 0.4s ease, color 0.4s ease;
     }
 
+    h1, h2, h3, h4 {
+      font-family: var(--font-heading);
+      letter-spacing: 0.5px;
+    }
+
     header {
       position: sticky;
       top: 0;
@@ -60,7 +72,7 @@
       background: rgba(248, 249, 250, 0.85);
     }
 
-    /* GESTIONE LOGO MOLTO PIÙ GRANDE */
+    /* GESTIONE LOGO INGRANDITO */
     .logo-container {
       position: relative;
       display: flex;
@@ -78,7 +90,6 @@
       transition: opacity 0.4s ease-in-out;
     }
 
-    /* Default (Tema Notte / Scuro): mostra il logo chiaro */
     .logo-light {
       opacity: 1;
     }
@@ -90,7 +101,6 @@
       opacity: 0;
     }
 
-    /* Tema Giorno / Chiaro: mostra il logo scuro */
     [data-theme="light"] .logo-light {
       opacity: 0;
     }
@@ -164,32 +174,44 @@
       font-weight: 600;
     }
 
+    /* LAYOUT GALLERIA DINAMICO E RESPONSIVE */
     .gallery-grid {
-      columns: 3 320px;
-      column-gap: 1.5rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.8rem;
     }
 
     .photo-card {
-      break-inside: avoid;
-      margin-bottom: 1.5rem;
       background: var(--card-bg);
-      border-radius: 8px;
+      border-radius: 10px;
       overflow: hidden;
       border: 1px solid var(--border);
       cursor: pointer;
       position: relative;
-      transition: transform 0.3s, box-shadow 0.3s;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      aspect-ratio: 4 / 3;
     }
 
     .photo-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 24px rgba(0,0,0,0.3);
+      transform: translateY(-6px);
+      box-shadow: 0 16px 32px rgba(0,0,0,0.35);
     }
 
+    /* EFFETTO LAZY LOADING & FADE-IN */
     .photo-card img {
       width: 100%;
+      height: 100%;
+      object-fit: cover;
       display: block;
       pointer-events: none;
+      opacity: 0;
+      filter: blur(8px);
+      transition: opacity 0.6s ease, filter 0.6s ease;
+    }
+
+    .photo-card img.loaded {
+      opacity: 1;
+      filter: blur(0);
     }
 
     .photo-info-overlay {
@@ -197,11 +219,18 @@
       bottom: 0;
       left: 0;
       right: 0;
-      padding: 1rem;
-      background: linear-gradient(transparent, rgba(0,0,0,0.8));
+      padding: 1.2rem;
+      background: linear-gradient(transparent, rgba(0,0,0,0.85));
       color: #fff;
       opacity: 0;
-      transition: opacity 0.3s;
+      transition: opacity 0.3s ease;
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .photo-info-overlay h4 {
+      font-size: 1.3rem;
+      font-weight: 600;
     }
 
     .photo-card:hover .photo-info-overlay {
@@ -275,6 +304,11 @@
       cursor: pointer;
       z-index: 20;
       font-size: 1.2rem;
+      transition: background 0.2s;
+    }
+
+    .carousel-btn:hover {
+      background: rgba(0,0,0,0.9);
     }
 
     .carousel-btn.prev { left: 1rem; }
@@ -288,6 +322,10 @@
       gap: 1rem;
       border-top: 1px solid var(--border);
       flex-wrap: wrap;
+    }
+
+    .modal-details h3 {
+      font-size: 1.5rem;
     }
 
     .buy-btn {
@@ -317,6 +355,11 @@
       border-radius: 50%;
       cursor: pointer;
       z-index: 30;
+      transition: background 0.2s;
+    }
+
+    .close-modal:hover {
+      background: rgba(0,0,0,0.95);
     }
 
     /* ABOUT SECTION */
@@ -330,15 +373,20 @@
       align-items: start;
     }
 
+    .about-container h2 {
+      font-size: 2.2rem;
+    }
+
     .loading-msg {
       text-align: center;
       padding: 3rem;
       color: var(--text-muted);
+      grid-column: 1 / -1;
     }
 
     @media (max-width: 768px) {
       .about-container { grid-template-columns: 1fr; }
-      .gallery-grid { columns: 1; }
+      .gallery-grid { grid-template-columns: 1fr; }
       .logo-container { height: 80px; width: 80px; }
     }
   </style>
@@ -348,9 +396,9 @@
 
   <header>
     <div class="logo-container" onclick="switchPage('gallery')">
-      <!-- Logo per la Dark Mode (Linee bianche) -->
+      <!-- Logo per la Dark Mode -->
       <img src="/AMDphotoLOGO-light.png" alt="AMD Photography Logo" class="site-logo logo-light">
-      <!-- Logo per la Light Mode (Linee nere) -->
+      <!-- Logo per la Light Mode -->
       <img src="/AMDphotoLOGO-dark.png" alt="AMD Photography Logo" class="site-logo logo-dark">
     </div>
     <div class="nav-links">
@@ -385,7 +433,7 @@
     </section>
   </main>
 
-  <!-- MODAL LIGHTBOX CON PROTEZIONE E MOCKUP CAROSELLO -->
+  <!-- MODAL LIGHTBOX CON PROTEZIONE E CAROSELLO -->
   <div class="modal" id="photoModal">
     <div class="modal-container">
       <button class="close-modal" onclick="closeModal()">✕</button>
@@ -540,8 +588,9 @@
         const card = document.createElement('div');
         card.className = 'photo-card';
         const mainImg = photo.views[0] || 'https://via.placeholder.com/800x600';
+        
         card.innerHTML = `
-          <img src="${mainImg}" alt="${photo.title || 'Fotografia'}">
+          <img src="${mainImg}" alt="${photo.title || 'Fotografia'}" loading="lazy" onload="this.classList.add('loaded')">
           <div class="photo-info-overlay">
             <h4>${photo.title || 'Senza titolo'}</h4>
           </div>
