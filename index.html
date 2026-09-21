@@ -287,6 +287,12 @@
       transition: opacity 0.25s ease;
     }
 
+    /* ADATTAMENTO IMMAGINE QUANDO IL VIEWPORT È IN FULLSCREEN NATIVO */
+    .modal-viewport:fullscreen img,
+    .modal-viewport:-webkit-full-screen img {
+      max-height: 90vh;
+    }
+
     .photo-shield {
       position: absolute;
       inset: 0;
@@ -316,6 +322,20 @@
       display: flex;
       gap: 0.5rem;
       z-index: 30;
+    }
+
+    /* PULSANTE DEDICATO ALL'INTERNO DEL VIEWPORT PER L'USCITA DAL FULLSCREEN */
+    .viewport-fullscreen-btn {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      z-index: 30;
+      display: none; /* Visibile unicamente in modalità Fullscreen */
+    }
+
+    .modal-viewport:fullscreen .viewport-fullscreen-btn,
+    .modal-viewport:-webkit-full-screen .viewport-fullscreen-btn {
+      display: flex;
     }
 
     .modal-action-btn {
@@ -504,9 +524,9 @@
   <div class="modal" id="photoModal">
     <div class="modal-container">
       
-      <!-- AZIONI IN ALTO -->
+      <!-- AZIONI IN ALTO (MODALITÀ NORMALE) -->
       <div class="modal-top-actions">
-        <button class="modal-action-btn" onclick="toggleFullscreen()" title="A tutto schermo">⛶</button>
+        <button class="modal-action-btn" id="btnFullscreen" onclick="toggleFullscreen()" title="A tutto schermo">⛶</button>
         <button class="modal-action-btn" onclick="closeModal()" title="Chiudi">✕</button>
       </div>
 
@@ -514,6 +534,10 @@
       <div class="modal-viewport" id="modalViewport">
         <div class="slide-counter" id="slideCounter">1 / 1</div>
         <div class="photo-shield" oncontextmenu="return false;"></div>
+        
+        <!-- PULSANTE PER USCIRE DAL FULLSCREEN ALL'INTERNO DEL VIEWPORT -->
+        <button class="modal-action-btn viewport-fullscreen-btn" onclick="toggleFullscreen()" title="Esci da tutto schermo">🗗</button>
+        
         <button class="carousel-btn prev" id="btnPrev" onclick="changeSlide(-1)">❮</button>
         <img id="modalImg" src="" alt="Foto principale">
         <button class="carousel-btn next" id="btnNext" onclick="changeSlide(1)">❯</button>
@@ -703,8 +727,12 @@
 
     function closeModal() {
       document.getElementById('photoModal').classList.remove('active');
-      if (document.fullscreenElement) {
-        document.exitFullscreen().catch(err => console.error(err));
+      if (document.fullscreenElement || document.webkitFullscreenElement) {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        }
       }
     }
 
@@ -787,7 +815,9 @@
 
     function toggleFullscreen() {
       const viewport = document.getElementById('modalViewport');
-      if (!document.fullscreenElement) {
+      const isFS = document.fullscreenElement || document.webkitFullscreenElement;
+
+      if (!isFS) {
         if (viewport.requestFullscreen) {
           viewport.requestFullscreen();
         } else if (viewport.webkitRequestFullscreen) {
@@ -796,9 +826,24 @@
       } else {
         if (document.exitFullscreen) {
           document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
         }
       }
     }
+
+    // Aggiorna l'icona principale a seconda dello stato effettivo del fullscreen
+    function updateFullscreenIcons() {
+      const isFS = document.fullscreenElement || document.webkitFullscreenElement;
+      const btnFS = document.getElementById('btnFullscreen');
+      if (btnFS) {
+        btnFS.textContent = isFS ? '🗗' : '⛶';
+        btnFS.title = isFS ? 'Esci da tutto schermo' : 'A tutto schermo';
+      }
+    }
+
+    document.addEventListener('fullscreenchange', updateFullscreenIcons);
+    document.addEventListener('webkitfullscreenchange', updateFullscreenIcons);
 
     // Gestione Swipe su Mobile
     const modalViewport = document.getElementById('modalViewport');
