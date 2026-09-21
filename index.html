@@ -314,7 +314,7 @@
       border: 1px solid rgba(255,255,255,0.1);
     }
 
-    /* BARRA AZIONI IN ALTO (FULLSCREEN & CLOSE) */
+    /* BARRA AZIONI IN ALTO (MODALITÀ NORMALE) */
     .modal-top-actions {
       position: absolute;
       top: 1rem;
@@ -324,18 +324,19 @@
       z-index: 30;
     }
 
-    /* PULSANTE DEDICATO ALL'INTERNO DEL VIEWPORT PER L'USCITA DAL FULLSCREEN */
+    /* PULSANTE CROCE ESCLUSIVO PER IL FULLSCREEN */
     .viewport-fullscreen-btn {
       position: absolute;
       top: 1rem;
       right: 1rem;
       z-index: 30;
-      display: none; /* Visibile unicamente in modalità Fullscreen */
+      display: none !important; /* Nascosto di default */
     }
 
+    /* VISIBILE ESCLUSIVAMENTE QUANDO IL VIEWPORT È IN FULLSCREEN */
     .modal-viewport:fullscreen .viewport-fullscreen-btn,
     .modal-viewport:-webkit-full-screen .viewport-fullscreen-btn {
-      display: flex;
+      display: flex !important;
     }
 
     .modal-action-btn {
@@ -535,8 +536,8 @@
         <div class="slide-counter" id="slideCounter">1 / 1</div>
         <div class="photo-shield" oncontextmenu="return false;"></div>
         
-        <!-- PULSANTE PER USCIRE DAL FULLSCREEN ALL'INTERNO DEL VIEWPORT -->
-        <button class="modal-action-btn viewport-fullscreen-btn" onclick="toggleFullscreen()" title="Esci da tutto schermo">🗗</button>
+        <!-- CROCE DEDICATA CHE COMPARE ESCLUSIVAMENTE IN FULLSCREEN -->
+        <button class="modal-action-btn viewport-fullscreen-btn" onclick="toggleFullscreen()" title="Esci da tutto schermo">✕</button>
         
         <button class="carousel-btn prev" id="btnPrev" onclick="changeSlide(-1)">❮</button>
         <img id="modalImg" src="" alt="Foto principale">
@@ -831,19 +832,6 @@
         }
       }
     }
-
-    // Aggiorna l'icona principale a seconda dello stato effettivo del fullscreen
-    function updateFullscreenIcons() {
-      const isFS = document.fullscreenElement || document.webkitFullscreenElement;
-      const btnFS = document.getElementById('btnFullscreen');
-      if (btnFS) {
-        btnFS.textContent = isFS ? '🗗' : '⛶';
-        btnFS.title = isFS ? 'Esci da tutto schermo' : 'A tutto schermo';
-      }
-    }
-
-    document.addEventListener('fullscreenchange', updateFullscreenIcons);
-    document.addEventListener('webkitfullscreenchange', updateFullscreenIcons);
 
     // Gestione Swipe su Mobile
     const modalViewport = document.getElementById('modalViewport');
