@@ -1,10 +1,13 @@
 backend:
-  name: git-gateway
+  name: github
+  repo: anddab/AMDPhotography
   branch: main
 
+# Configurazione del salvataggio media
 media_folder: "uploads"
 public_folder: "/uploads"
 
+# Definizione collezioni (mantieni le tue collezioni esistenti per le foto)
 collections:
   - name: "photos"
     label: "Fotografie"
