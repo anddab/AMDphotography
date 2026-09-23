@@ -72,7 +72,7 @@
       background: rgba(248, 249, 250, 0.85);
     }
 
-    /* GESTIONE LOGO INGRANDITO */
+    /* LOGO */
     .logo-container {
       position: relative;
       display: flex;
@@ -174,7 +174,7 @@
       font-weight: 600;
     }
 
-    /* LAYOUT GALLERIA DINAMICO E RESPONSIVE */
+    /* GALLERIA */
     .gallery-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -197,7 +197,6 @@
       box-shadow: 0 16px 32px rgba(0,0,0,0.35);
     }
 
-    /* EFFETTO LAZY LOADING & FADE-IN */
     .photo-card img {
       width: 100%;
       height: 100%;
@@ -237,7 +236,7 @@
       opacity: 1;
     }
 
-    /* MODAL LIGHTBOX CON ELEMENTI AVANZATI */
+    /* MODALE LIGHTBOX */
     .modal {
       display: none;
       position: fixed;
@@ -287,7 +286,6 @@
       transition: opacity 0.25s ease;
     }
 
-    /* ADATTAMENTO IMMAGINE QUANDO IL VIEWPORT È IN FULLSCREEN NATIVO */
     .modal-viewport:fullscreen img,
     .modal-viewport:-webkit-full-screen img {
       max-height: 90vh;
@@ -299,7 +297,6 @@
       z-index: 10;
     }
 
-    /* BADGE CONTATORE SLIDE */
     .slide-counter {
       position: absolute;
       top: 1rem;
@@ -314,7 +311,6 @@
       border: 1px solid rgba(255,255,255,0.1);
     }
 
-    /* BARRA AZIONI IN ALTO (MODALITÀ NORMALE) */
     .modal-top-actions {
       position: absolute;
       top: 1rem;
@@ -324,16 +320,15 @@
       z-index: 30;
     }
 
-    /* PULSANTE CROCE ESCLUSIVO PER IL FULLSCREEN */
+    /* ICONA PER USCIRE DAL FULLSCREEN: VISIBILE SOLO IN FULLSCREEN */
     .viewport-fullscreen-btn {
       position: absolute;
       top: 1rem;
       right: 1rem;
       z-index: 30;
-      display: none !important; /* Nascosto di default */
+      display: none !important;
     }
 
-    /* VISIBILE ESCLUSIVAMENTE QUANDO IL VIEWPORT È IN FULLSCREEN */
     .modal-viewport:fullscreen .viewport-fullscreen-btn,
     .modal-viewport:-webkit-full-screen .viewport-fullscreen-btn {
       display: flex !important;
@@ -382,7 +377,6 @@
     .carousel-btn.prev { left: 1rem; }
     .carousel-btn.next { right: 1rem; }
 
-    /* BARRA MINIATURE (THUMBNAILS) */
     .thumbnails-bar {
       display: flex;
       justify-content: center;
@@ -449,7 +443,6 @@
       background: var(--accent-hover);
     }
 
-    /* ABOUT SECTION */
     .page-section { display: none; }
     .page-section.active { display: block; }
 
@@ -478,16 +471,13 @@
       .carousel-btn { width: 36px; height: 36px; font-size: 1rem; }
     }
   </style>
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 <body>
 
   <header>
     <div class="logo-container" onclick="switchPage('gallery')">
-      <!-- Logo per la Dark Mode -->
-      <img src="/AMDphotoLOGO-light.png" alt="AMD Photography Logo" class="site-logo logo-light">
-      <!-- Logo per la Light Mode -->
-      <img src="/AMDphotoLOGO-dark.png" alt="AMD Photography Logo" class="site-logo logo-dark">
+      <img src="AMDphotoLOGO-light.png" alt="AMD Photography Logo" class="site-logo logo-light">
+      <img src="AMDphotoLOGO-dark.png" alt="AMD Photography Logo" class="site-logo logo-dark">
     </div>
     <div class="nav-links">
       <button class="nav-btn active" onclick="switchPage('gallery')">Galleria</button>
@@ -497,16 +487,13 @@
   </header>
 
   <main>
-    <!-- SEZIONE GALLERIA -->
     <section id="gallery-section" class="page-section active">
       <div class="filters" id="categoryFilters"></div>
-
       <div class="gallery-grid" id="galleryGrid">
         <div class="loading-msg">Caricamento fotografie in corso...</div>
       </div>
     </section>
 
-    <!-- SEZIONE ABOUT -->
     <section id="about-section" class="page-section">
       <div class="about-container">
         <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80" alt="Fotografo" style="width:100%; border-radius:8px;">
@@ -521,22 +508,19 @@
     </section>
   </main>
 
-  <!-- MODAL LIGHTBOX AVANZATO CON MINIATURE, COUNTER, TOUCH E FULLSCREEN -->
   <div class="modal" id="photoModal">
     <div class="modal-container">
       
-      <!-- AZIONI IN ALTO (MODALITÀ NORMALE) -->
       <div class="modal-top-actions">
         <button class="modal-action-btn" id="btnFullscreen" onclick="toggleFullscreen()" title="A tutto schermo">⛶</button>
         <button class="modal-action-btn" onclick="closeModal()" title="Chiudi">✕</button>
       </div>
 
-      <!-- VIEWPORT IMMAGINE -->
       <div class="modal-viewport" id="modalViewport">
         <div class="slide-counter" id="slideCounter">1 / 1</div>
         <div class="photo-shield" oncontextmenu="return false;"></div>
         
-        <!-- CROCE DEDICATA CHE COMPARE ESCLUSIVAMENTE IN FULLSCREEN -->
+        <!-- CROCE PER USCIRE ESCLUSIVAMENTE IN FULLSCREEN -->
         <button class="modal-action-btn viewport-fullscreen-btn" onclick="toggleFullscreen()" title="Esci da tutto schermo">✕</button>
         
         <button class="carousel-btn prev" id="btnPrev" onclick="changeSlide(-1)">❮</button>
@@ -544,10 +528,8 @@
         <button class="carousel-btn next" id="btnNext" onclick="changeSlide(1)">❯</button>
       </div>
 
-      <!-- BARRA MINIATURE -->
       <div class="thumbnails-bar" id="thumbnailsBar"></div>
 
-      <!-- DETTAGLI E ACQUISTO -->
       <div class="modal-details">
         <div>
           <h3 id="modalTitle">Titolo Foto</h3>
@@ -559,10 +541,8 @@
   </div>
 
   <script>
-    // Blocco globale del tasto destro
     document.addEventListener('contextmenu', event => event.preventDefault());
 
-    // Configurazione GitHub
     const GITHUB_USER = "anddab";
     const GITHUB_REPO = "AMDPhotography";
     const BRANCH = "main";
@@ -572,7 +552,6 @@
     let currentSlideIndex = 0;
     let currentFilter = 'all';
 
-    // Touch Handling per Mobile Swipe
     let touchStartX = 0;
     let touchEndX = 0;
 
@@ -764,7 +743,6 @@
       const views = (currentPhoto.views && currentPhoto.views.length > 0) ? currentPhoto.views : ['https://via.placeholder.com/1200x800'];
       const modalImg = document.getElementById('modalImg');
 
-      // Transizione opacità scatto
       modalImg.style.opacity = '0.3';
       setTimeout(() => {
         modalImg.src = views[currentSlideIndex];
@@ -778,11 +756,9 @@
       const exifInfo = currentPhoto.exif || '';
       document.getElementById('modalExif').textContent = [cameraInfo, lensInfo, exifInfo].filter(Boolean).join(' | ') || 'AMD Photography';
 
-      // Aggiornamento Contatore Slide
       const counter = document.getElementById('slideCounter');
       counter.textContent = `${currentSlideIndex + 1} / ${views.length}`;
 
-      // Gestione pulsanti freccia se c'è 1 sola immagine
       const btnPrev = document.getElementById('btnPrev');
       const btnNext = document.getElementById('btnNext');
       if (views.length <= 1) {
@@ -793,7 +769,6 @@
         btnNext.style.display = 'block';
       }
 
-      // Aggiornamento miniature attive
       const thumbs = document.querySelectorAll('.thumb-item');
       thumbs.forEach((t, i) => {
         t.classList.toggle('active', i === currentSlideIndex);
@@ -833,7 +808,6 @@
       }
     }
 
-    // Gestione Swipe su Mobile
     const modalViewport = document.getElementById('modalViewport');
     modalViewport.addEventListener('touchstart', (e) => {
       touchStartX = e.changedTouches[0].screenX;
@@ -847,10 +821,10 @@
     function handleSwipe() {
       const swipeThreshold = 40;
       if (touchEndX < touchStartX - swipeThreshold) {
-        changeSlide(1); // Swipe sinistra -> foto successiva
+        changeSlide(1);
       }
       if (touchEndX > touchStartX + swipeThreshold) {
-        changeSlide(-1); // Swipe destra -> foto precedente
+        changeSlide(-1);
       }
     }
 
