@@ -1,11 +1,13 @@
 backend:
   name: github
-  repo: anddab/AMDPhotography
+  repo: anddab/AMDphotography  # Inserisci qui il nome esatto del tuo repository
   branch: main
 
-# Configurazione del salvataggio media
+# Cartella del repository dove Sveltia salverà i file caricati
 media_folder: "uploads"
-public_folder: "/uploads"
+
+# Percorso pubblico utilizzato dall'HTML per visualizzarle
+public_folder: "uploads"
 
 # Definizione collezioni (mantieni le tue collezioni esistenti per le foto)
 collections:
