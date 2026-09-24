@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AMD Photography - Fine Art Portfolio</title>
   
+  <!-- Font Google Elegant per titoli Fine Art -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
@@ -71,6 +72,7 @@
       background: rgba(248, 249, 250, 0.85);
     }
 
+    /* LOGO */
     .logo-container {
       position: relative;
       display: flex;
@@ -88,11 +90,24 @@
       transition: opacity 0.4s ease-in-out;
     }
 
-    .logo-light { opacity: 1; }
-    .logo-dark { position: absolute; top: 0; left: 0; opacity: 0; }
+    .logo-light {
+      opacity: 1;
+    }
 
-    [data-theme="light"] .logo-light { opacity: 0; }
-    [data-theme="light"] .logo-dark { opacity: 1; }
+    .logo-dark {
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0;
+    }
+
+    [data-theme="light"] .logo-light {
+      opacity: 0;
+    }
+
+    [data-theme="light"] .logo-dark {
+      opacity: 1;
+    }
 
     .nav-links {
       display: flex;
@@ -110,7 +125,9 @@
       transition: color 0.2s;
     }
 
-    .nav-btn:hover, .nav-btn.active { color: var(--text); }
+    .nav-btn:hover, .nav-btn.active {
+      color: var(--text);
+    }
 
     .theme-toggle {
       background: none;
@@ -157,6 +174,7 @@
       font-weight: 600;
     }
 
+    /* GALLERIA */
     .gallery-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -197,7 +215,9 @@
 
     .photo-info-overlay {
       position: absolute;
-      bottom: 0; left: 0; right: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
       padding: 1.2rem;
       background: linear-gradient(transparent, rgba(0,0,0,0.85));
       color: #fff;
@@ -207,9 +227,16 @@
       align-items: flex-end;
     }
 
-    .photo-info-overlay h4 { font-size: 1.3rem; font-weight: 600; }
-    .photo-card:hover .photo-info-overlay { opacity: 1; }
+    .photo-info-overlay h4 {
+      font-size: 1.3rem;
+      font-weight: 600;
+    }
 
+    .photo-card:hover .photo-info-overlay {
+      opacity: 1;
+    }
+
+    /* MODALE LIGHTBOX */
     .modal {
       display: none;
       position: fixed;
@@ -222,7 +249,9 @@
       padding: 1.5rem;
     }
 
-    .modal.active { display: flex; }
+    .modal.active {
+      display: flex;
+    }
 
     .modal-container {
       max-width: 1100px;
@@ -340,7 +369,10 @@
       transition: background 0.2s;
     }
 
-    .carousel-btn:hover { background: rgba(0,0,0,0.9); }
+    .carousel-btn:hover {
+      background: rgba(0,0,0,0.9);
+    }
+
     .carousel-btn.prev { left: 1rem; }
     .carousel-btn.next { right: 1rem; }
 
@@ -372,7 +404,9 @@
       object-fit: cover;
     }
 
-    .thumb-item:hover { opacity: 0.85; }
+    .thumb-item:hover {
+      opacity: 0.85;
+    }
 
     .thumb-item.active {
       opacity: 1;
@@ -389,7 +423,9 @@
       flex-wrap: wrap;
     }
 
-    .modal-details h3 { font-size: 1.5rem; }
+    .modal-details h3 {
+      font-size: 1.5rem;
+    }
 
     .buy-btn {
       background: var(--accent);
@@ -402,7 +438,9 @@
       transition: background 0.2s;
     }
 
-    .buy-btn:hover { background: var(--accent-hover); }
+    .buy-btn:hover {
+      background: var(--accent-hover);
+    }
 
     .page-section { display: none; }
     .page-section.active { display: block; }
@@ -414,7 +452,9 @@
       align-items: start;
     }
 
-    .about-container h2 { font-size: 2.2rem; }
+    .about-container h2 {
+      font-size: 2.2rem;
+    }
 
     .loading-msg {
       text-align: center;
@@ -523,31 +563,44 @@
       const result = { views: [] };
       const lines = text.split('\n');
       let inFrontmatter = false;
+      let inMockups = false;
 
       lines.forEach(line => {
         const trimmed = line.trim();
-        
+
         if (trimmed === '---') {
           inFrontmatter = !inFrontmatter;
           return;
         }
-        
-        if (inFrontmatter) {
-          // Estrae immagini aggiuntive o mockup presenti nelle righe
-          if (trimmed.includes('uploads/') || trimmed.includes('images/')) {
-            let cleanPath = trimmed
-              .replace(/^-\s*/, '')
-              .replace(/^mockup:\s*/, '')
-              .replace(/^["']|["']$/g, '')
-              .trim();
 
-            if (cleanPath && (cleanPath.startsWith('uploads/') || cleanPath.startsWith('images/')) && !result.views.includes(cleanImgUrl(cleanPath))) {
-              result.views.push(cleanImgUrl(cleanPath));
+        if (inFrontmatter) {
+          if (trimmed.startsWith('mockups:')) {
+            inMockups = true;
+            return;
+          }
+
+          if (inMockups) {
+            if (trimmed.startsWith('-')) {
+              let val = trimmed
+                .replace(/^-\s*/, '')
+                .replace(/^mockup:\s*/, '')
+                .replace(/^["']|["']$/g, '')
+                .trim();
+
+              if (val) {
+                const cleaned = cleanImgUrl(val);
+                if (!result.views.includes(cleaned)) {
+                  result.views.push(cleaned);
+                }
+              }
+              return;
+            } else if (trimmed !== '') {
+              inMockups = false;
             }
           }
 
           const colonIndex = trimmed.indexOf(':');
-          if (colonIndex !== -1 && !trimmed.startsWith('-')) {
+          if (colonIndex !== -1 && !inMockups) {
             const key = trimmed.slice(0, colonIndex).trim();
             let val = trimmed.slice(colonIndex + 1).trim().replace(/^["']|["']$/g, '');
             if (key && key !== 'mockups') {
@@ -558,9 +611,9 @@
       });
 
       if (result.image) {
-        const mainImgClean = cleanImgUrl(result.image);
-        result.views = result.views.filter(v => v !== mainImgClean);
-        result.views.unshift(mainImgClean);
+        const mainClean = cleanImgUrl(result.image);
+        result.views = result.views.filter(v => v !== mainClean);
+        result.views.unshift(mainClean);
       }
 
       return result;
