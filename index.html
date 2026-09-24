@@ -65,6 +65,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 1.5rem;
       transition: background-color 0.4s ease, border-color 0.4s ease;
     }
 
@@ -80,6 +81,7 @@
       cursor: pointer;
       height: 130px;
       width: 130px;
+      flex-shrink: 0;
     }
 
     .site-logo {
@@ -138,6 +140,7 @@
       cursor: pointer;
       font-size: 0.85rem;
       transition: border-color 0.3s, color 0.3s;
+      white-space: nowrap;
     }
 
     main {
@@ -463,10 +466,34 @@
       grid-column: 1 / -1;
     }
 
+    /* MEDIA QUERY PER DISPOSITIVI MOBILI (ADATTAMENTO LOGO E MENU) */
     @media (max-width: 768px) {
+      header {
+        padding: 0.5rem 1rem;
+        gap: 0.8rem;
+        justify-content: space-between;
+      }
+
+      .logo-container {
+        height: 65px;
+        width: 65px;
+      }
+
+      .nav-links {
+        gap: 0.8rem;
+      }
+
+      .nav-btn {
+        font-size: 0.85rem;
+      }
+
+      .theme-toggle {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.8rem;
+      }
+
       .about-container { grid-template-columns: 1fr; }
       .gallery-grid { grid-template-columns: 1fr; }
-      .logo-container { height: 80px; width: 80px; }
       .carousel-btn { width: 36px; height: 36px; font-size: 1rem; }
     }
   </style>
