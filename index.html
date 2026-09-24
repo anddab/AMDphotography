@@ -596,12 +596,15 @@
       return result;
     }
 
-    function cleanImgUrl(url) {
-      if (!url) return '';
-      if (url.startsWith('http://') || url.startsWith('https://')) return url;
-      return url.startsWith('/') ? url : '/' + url;
-    }
 
+    // CODICE NUOVO (CORRETTO) per function cleanImgUrl(url):
+function cleanImgUrl(url) {
+  if (!url) return '';
+  if (url.startsWith('http://') || url.startsWith('https://')) return url;
+  // Rimuove eventuale slash iniziale per usare percorsi relativi compatibili con GitHub Pages
+  return url.startsWith('/') ? url.slice(1) : url;
+}
+    
     async function loadCMSPhotos() {
       const grid = document.getElementById('galleryGrid');
       try {
