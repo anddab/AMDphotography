@@ -9,7 +9,7 @@ media_folder: "uploads"
 # Percorso pubblico utilizzato dall'HTML per visualizzarle
 public_folder: "uploads"
 
-# Definizione collezioni (mantieni le tue collezioni esistenti per le foto)
+# Definizione collezioni
 collections:
   - name: "photos"
     label: "Fotografie"
@@ -37,3 +37,21 @@ collections:
       - { label: "Obiettivo", name: "lens", widget: "string", default: "24-70mm f/2.8 GM II" }
       - { label: "Dati EXIF (Diaframma/Tempo/ISO)", name: "exif", widget: "string", default: "f/8.0 | 1/250s | ISO 100" }
       - { label: "Luogo", name: "location", widget: "string", required: false }
+
+  - name: "settings"
+    label: "Impostazioni"
+    files:
+      - file: "content/settings/general.md"
+        label: "Impostazioni Sito e Footer"
+        name: "general"
+        fields:
+          - { label: "Nome Sito / Copyright", name: "site_title", widget: "string", default: "AMD Photography" }
+          - { label: "Sottotitolo Footer", name: "footer_subtitle", widget: "string", default: "Fine Art & Landscape Photography" }
+          - { label: "Email di Contatto", name: "contact_email", widget: "string", required: false }
+          - label: "Link Social & Store"
+            name: "social_links"
+            widget: "list"
+            required: false
+            fields:
+              - { label: "Nome Piattaforma (es. Instagram, Picfair)", name: "name", widget: "string" }
+              - { label: "URL Completo (es. https://instagram.com/...)", name: "url", widget: "string" }
