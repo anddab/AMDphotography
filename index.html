@@ -149,32 +149,102 @@
       padding: 2rem;
     }
 
-    .filters {
+    /* --------------------------------------------------
+       FILTRI CATEGORIE (TUTTE + MENÙ A TENDINA CUSTOM)
+    -------------------------------------------------- */
+    .filter-container {
       display: flex;
+      align-items: center;
       justify-content: center;
       gap: 0.75rem;
       margin-bottom: 2rem;
-      flex-wrap: wrap;
+      position: relative;
+      z-index: 50;
       min-height: 38px;
     }
 
-    .filter-btn {
+    .filter-btn,
+    .dropdown-trigger {
       background: var(--card-bg);
       border: 1px solid var(--border);
       color: var(--text-muted);
       padding: 0.5rem 1.2rem;
       border-radius: 20px;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: all 0.2s ease;
       font-size: 0.85rem;
-      text-transform: capitalize;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      outline: none;
     }
 
-    .filter-btn:hover, .filter-btn.active {
+    .filter-btn:hover,
+    .dropdown-trigger:hover,
+    .filter-btn.active,
+    .dropdown-trigger.active {
       background: var(--accent);
       color: #000;
       border-color: var(--accent);
       font-weight: 600;
+    }
+
+    .dropdown-arrow {
+      font-size: 0.65rem;
+      transition: transform 0.3s ease;
+    }
+
+    .dropdown-trigger.active .dropdown-arrow {
+      transform: rotate(180deg);
+    }
+
+    .custom-dropdown {
+      position: relative;
+    }
+
+    .dropdown-menu {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      min-width: 190px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-8px);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+      z-index: 60;
+    }
+
+    .dropdown-menu.open {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .dropdown-item {
+      padding: 10px 16px;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      text-transform: capitalize;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .dropdown-item:hover {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text);
+    }
+
+    .dropdown-item.active {
+      color: var(--accent);
+      font-weight: 600;
+      background: rgba(212, 175, 55, 0.08);
     }
 
     /* GALLERIA */
@@ -466,7 +536,7 @@
       grid-column: 1 / -1;
     }
 
-    /* MEDIA QUERY PER DISPOSITIVI MOBILI (ADATTAMENTO LOGO E MENU) */
+    /* MEDIA QUERY PER DISPOSITIVI MOBILI */
     @media (max-width: 768px) {
       header {
         padding: 0.5rem 1rem;
@@ -514,7 +584,19 @@
 
   <main>
     <section id="gallery-section" class="page-section active">
-      <div class="filters" id="categoryFilters"></div>
+      <!-- CONTENITORE FILTRI CATEGORIE -->
+      <div class="filter-container">
+        <button class="filter-btn active" id="btnAllCategories">Tutte</button>
+
+        <div class="custom-dropdown">
+          <button class="dropdown-trigger" id="dropdownTrigger">
+            <span id="selectedCategoryText">Seleziona Categoria</span>
+            <span class="dropdown-arrow">▾</span>
+          </button>
+          <div class="dropdown-menu" id="dropdownMenu"></div>
+        </div>
+      </div>
+
       <div class="gallery-grid" id="galleryGrid">
         <div class="loading-msg">Caricamento fotografie in corso...</div>
       </div>
@@ -676,31 +758,87 @@
       }
     }
 
+    /* POPOLA DROPDOWN ED ESEGUE GESTIONE FILTRI */
     function buildDynamicFilters() {
-      const filterContainer = document.getElementById('categoryFilters');
-      filterContainer.innerHTML = '';
+      const dropdownMenu = document.getElementById('dropdownMenu');
+      dropdownMenu.innerHTML = '';
 
       const categories = new Set();
       loadedPhotos.forEach(p => {
-        if (p.category) {
-          categories.add(p.category.trim().toLowerCase());
+        if (p.category && p.category.trim() !== '') {
+          categories.add(p.category.trim());
         }
       });
 
-      const allBtn = document.createElement('button');
-      allBtn.className = 'filter-btn active';
-      allBtn.textContent = 'Tutte';
-      allBtn.onclick = (e) => filterGallery('all', e.target);
-      filterContainer.appendChild(allBtn);
+      const sortedCategories = Array.from(categories).sort((a, b) => a.localeCompare(b, 'it', { sensitivity: 'base' }));
 
-      Array.from(categories).sort().forEach(cat => {
-        const btn = document.createElement('button');
-        btn.className = 'filter-btn';
-        btn.textContent = cat;
-        btn.onclick = (e) => filterGallery(cat, e.target);
-        filterContainer.appendChild(btn);
+      sortedCategories.forEach(cat => {
+        if (cat.toLowerCase() === 'tutte' || cat.toLowerCase() === 'all') return;
+
+        const item = document.createElement('div');
+        item.className = 'dropdown-item';
+        item.dataset.category = cat;
+        item.textContent = cat;
+        
+        item.addEventListener('click', () => {
+          selectCategory(cat);
+          closeDropdown();
+        });
+
+        dropdownMenu.appendChild(item);
       });
     }
+
+    function selectCategory(cat) {
+      const allBtn = document.getElementById('btnAllCategories');
+      const trigger = document.getElementById('dropdownTrigger');
+      const triggerText = document.getElementById('selectedCategoryText');
+      const items = document.querySelectorAll('.dropdown-item');
+
+      if (cat === 'all') {
+        allBtn.classList.add('active');
+        trigger.classList.remove('active');
+        triggerText.textContent = 'Seleziona Categoria';
+        items.forEach(i => i.classList.remove('active'));
+      } else {
+        allBtn.classList.remove('active');
+        trigger.classList.add('active');
+        triggerText.textContent = cat;
+        items.forEach(i => {
+          i.classList.toggle('active', i.dataset.category.toLowerCase() === cat.toLowerCase());
+        });
+      }
+
+      filterGallery(cat);
+    }
+
+    function closeDropdown() {
+      const menu = document.getElementById('dropdownMenu');
+      const trigger = document.getElementById('dropdownTrigger');
+      if (menu) menu.classList.remove('open');
+      if (trigger && currentFilter === 'all') trigger.classList.remove('active');
+    }
+
+    // Event Listeners per Dropdown Categorie
+    const dropdownTrigger = document.getElementById('dropdownTrigger');
+    const dropdownMenu = document.getElementById('dropdownMenu');
+    const btnAllCategories = document.getElementById('btnAllCategories');
+
+    if (dropdownTrigger) {
+      dropdownTrigger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dropdownMenu.classList.toggle('open');
+      });
+    }
+
+    if (btnAllCategories) {
+      btnAllCategories.addEventListener('click', () => {
+        selectCategory('all');
+        closeDropdown();
+      });
+    }
+
+    document.addEventListener('click', closeDropdown);
 
     function renderGallery(filter = 'all') {
       const grid = document.getElementById('galleryGrid');
@@ -732,12 +870,8 @@
       });
     }
 
-    function filterGallery(cat, targetBtn) {
+    function filterGallery(cat) {
       currentFilter = cat;
-      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-      if (targetBtn) {
-        targetBtn.classList.add('active');
-      }
       renderGallery(cat);
     }
 
@@ -818,16 +952,16 @@
         t.classList.toggle('active', i === currentSlideIndex);
       });
 
-      // NUOVO CODICE (supporta picfair_url e buy_url):
-const buyBtn = document.getElementById('modalBuyLink');
-const targetUrl = currentPhoto.picfair_url || currentPhoto.buy_url;
+      // GESTIONE DINAMICA DEL PULSANTE ACQUISTA (PICFAIR / BUY_URL)
+      const buyBtn = document.getElementById('modalBuyLink');
+      const targetUrl = currentPhoto.picfair_url || currentPhoto.buy_url;
 
-if (targetUrl && targetUrl.trim() !== '') {
-  buyBtn.href = targetUrl.trim();
-  buyBtn.style.display = 'inline-block';
-} else {
-  buyBtn.style.display = 'none';
-}
+      if (targetUrl && targetUrl.trim() !== '') {
+        buyBtn.href = targetUrl.trim();
+        buyBtn.style.display = 'inline-block';
+      } else {
+        buyBtn.style.display = 'none';
+      }
     }
 
     function changeSlide(direction) {
@@ -884,8 +1018,8 @@ if (targetUrl && targetUrl.trim() !== '') {
       } else {
         document.getElementById('about-section').classList.add('active');
       }
-      if (event && event.target && event.target.classList.contains('nav-btn')) {
-        event.target.classList.add('active');
+      if (window.event && window.event.target && window.event.target.classList.contains('nav-btn')) {
+        window.event.target.classList.add('active');
       }
     }
 
