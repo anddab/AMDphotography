@@ -818,13 +818,16 @@
         t.classList.toggle('active', i === currentSlideIndex);
       });
 
-      const buyBtn = document.getElementById('modalBuyLink');
-      if (currentPhoto.buy_url) {
-        buyBtn.href = currentPhoto.buy_url;
-        buyBtn.style.display = 'inline-block';
-      } else {
-        buyBtn.style.display = 'none';
-      }
+      // NUOVO CODICE (supporta picfair_url e buy_url):
+const buyBtn = document.getElementById('modalBuyLink');
+const targetUrl = currentPhoto.picfair_url || currentPhoto.buy_url;
+
+if (targetUrl && targetUrl.trim() !== '') {
+  buyBtn.href = targetUrl.trim();
+  buyBtn.style.display = 'inline-block';
+} else {
+  buyBtn.style.display = 'none';
+}
     }
 
     function changeSlide(direction) {
